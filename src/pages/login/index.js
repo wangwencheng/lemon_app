@@ -154,7 +154,7 @@ class LoginNew extends React.Component {
           <div className="logo"></div>
           <div className="welcome-wrap">
             <div className="hello">您好!</div>
-            <div className="welcome">欢迎来到<span>UMI项目</span></div>
+            <div className="welcome">欢迎来到<span>lemon</span></div>
           </div>
         </div>
         <div className="form-wraper">
