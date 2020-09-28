@@ -22,10 +22,10 @@ class MyIndex extends Component {
 
   }
   linkurl(v){
-    if (v === 'address') {
-      console.log('去地址管理咯')
+    if (v === 'about') {
+      console.log('去关于我们咯')
     } else {
-      console.log('去支付账户管理咯')
+      console.log('去设置中心咯')
     }
   }
   render() {
@@ -41,23 +41,15 @@ class MyIndex extends Component {
         { !my.list.data && <OrderStatus countList={0} />}
         { my.list.data && <OrderStatus countList={my.list.data} />}
         <div className={styles.service_info + ' ' + 'box_shadow'}>
-          <div className={styles.service_title + ' ' + 'border_bottommin'}>我的服务</div>
+          <div className={styles.service_title + ' ' + 'border_bottommin'}>用户帮助</div>
           <div className={styles.service_content}>
-            <div className={styles.service_item} onClick={() => this.linkurl('account')}>
+            <div className={styles.service_item} onClick={() => this.linkurl('about')}>
               <img
                 className={styles.service_img}
                 src={require('../../assets/recycleH5_17.png')}
                 alt=""
               />
-              <div className={styles.service_text}>收款方式</div>
-            </div>
-            <div className={styles.service_item} onClick={() => this.linkurl('address')}>
-              <img
-                className={styles.service_img}
-                src={require('../../assets/recycleH5_18.png')}
-                alt=""
-              />
-              <div className={styles.service_text}>收货地址</div>
+              <div className={styles.service_text}>关于我们</div>
             </div>
             <div className={styles.service_item} onClick={() => {console.log('帮助中心')}}>
               <img
@@ -66,6 +58,14 @@ class MyIndex extends Component {
                 alt=""
               />
               <div className={styles.service_text}>帮助中心</div>
+            </div>
+            <div className={styles.service_item} onClick={() => this.linkurl('setting')}>
+              <img
+                className={styles.service_img}
+                src={require('../../assets/recycleH5_18.png')}
+                alt=""
+              />
+              <div className={styles.service_text}>设置</div>
             </div>
           </div>
         </div>

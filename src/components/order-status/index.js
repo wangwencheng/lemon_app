@@ -16,25 +16,25 @@ export default class OrderStatus extends React.Component {
       // 订单状态
       statusItem: [
         {
-          text: `待发货`,
+          text: `观看历史`,
           url: recycleH5_14,
           name:'waitingDeliveryCount',
           value: 1
         },
         {
-          text: `待收货`,
+          text: `我的收藏`,
           url: recycleH5_13,
           name: 'waitingReceiveCount',
           value: 2
         },
         {
-          text: `待验机`,
+          text: `消息中心`,
           url: recycleH5_16,
           name:'waitingReviewCount',
           value: 3
         },
         {
-          text: `待确认`,
+          text: `发布视频`,
           url: recycleH5_11,
           name:'waitingConfirmCount',
           value: 4
@@ -61,7 +61,7 @@ export default class OrderStatus extends React.Component {
             }
           }
         >
-          <div className={styles.order_text_large}>我的订单</div>
+          <div className={styles.order_text_large}>我的服务</div>
           <div className={styles.order_text_right}>
             <span className={styles.right_content}>查看更多</span>
           </div>

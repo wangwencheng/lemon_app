@@ -1,3 +1,5 @@
+import pageRoutes from './config/router.config';
+
 const path = require('path');
 
 const server = 'http://localhost:3000';
@@ -23,6 +25,8 @@ export default {
       hardSource: false,
     }],
   ],
+  // 路由配置
+  routes: pageRoutes,
   alias:{
     components:path.resolve(__dirname,'src/components'),
         utils:path.resolve(__dirname,'src/utils'),
