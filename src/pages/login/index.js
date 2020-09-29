@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'dva';
+import React, {Component} from 'react';
+import {connect} from 'dva';
 import './index.less';
 import classNames from 'classnames';
-import { Toast, Modal, Button, List } from 'antd-mobile';
-import { CSSTransition } from 'react-transition-group';
+import {Toast, Modal, Button, List} from 'antd-mobile';
+import {CSSTransition} from 'react-transition-group';
 import router from 'umi/router';
-import { baseUrl } from '@/utils/baseServer';
+import {baseUrl} from '@/utils/baseServer';
 
-// @connect(({ login }) => ({ login }))
+@connect(({login}) => ({login}))
 class LoginNew extends React.Component {
   constructor(props) {
     super(props);
@@ -41,11 +41,13 @@ class LoginNew extends React.Component {
       visible: true
     });
   }
+
   close(v) {
     this.setState({
       visible: false
     });
   }
+
   onClose = key => () => {
     this.setState({
       [key]: false,
@@ -63,20 +65,20 @@ class LoginNew extends React.Component {
    * 倒计时
    */
   setTime() {
-    this.setState({ isWait: true });
+    this.setState({isWait: true});
     let countdown = 60
-    this.setState({ codeText: countdown + 's' });
+    this.setState({codeText: countdown + 's'});
     this.timer = setInterval(() => {
       if (countdown === 0) {
         this.setState({
-           codeText: '重新获取',
-           isWait: false
+          codeText: '重新获取',
+          isWait: false
         });
         this.refreshCodeImage();
         clearInterval(this.timer);
       } else {
         countdown--
-        this.setState({ codeText: countdown + 's' });
+        this.setState({codeText: countdown + 's'});
       }
     }, 1000)
   }
@@ -86,8 +88,8 @@ class LoginNew extends React.Component {
    *  @return {Boolean} 当信息不完整时退出
    */
   getCode() {
-    const { phone, phoneCode, imgCode } = this.state;
-    const { dispatch } = this.props;
+    const {phone, phoneCode, imgCode} = this.state;
+    const {dispatch} = this.props;
     if (this.state.isWait) {
       return false
     }
@@ -117,7 +119,7 @@ class LoginNew extends React.Component {
     }
     if (!/^1[3456789]\d{9}$/.test(this.state.phone)) {
       Toast.fail('请输入正确的手机号', 2);
-      this.setState({ phoneError: true });
+      this.setState({phoneError: true});
       return false
     }
     if (!this.state.imgCode) {
@@ -126,7 +128,7 @@ class LoginNew extends React.Component {
     }
     if (!/^[a-zA-Z0-9]{4,5}$/.test(this.state.imgCode)) {
       Toast.fail('图形验证码不正确', 2);
-      this.setState({ imgCodeError: true });
+      this.setState({imgCodeError: true});
       return false
     }
     return true
@@ -136,12 +138,12 @@ class LoginNew extends React.Component {
     // watch监听实时校验表单
     if (prevState.phone !== this.state.phone) {
       if (/^1[3456789]\d{9}$/.test(this.state.phone)) {
-        this.setState({ phoneError: false });
+        this.setState({phoneError: false});
       }
     }
     if (prevState.imgCode !== this.state.imgCode) {
       if (/^[0-9]{4}$/.test(this.state.imgCode)) {
-        this.setState({ imgCodeError: false });
+        this.setState({imgCodeError: false});
       }
     }
   }
@@ -172,22 +174,22 @@ class LoginNew extends React.Component {
               timeout={400}
               classNames="input"
             >
-            <input
-              className={ phoneError ? 'error' : ''}
-              value={phone}
-              onChange={e => {
-                if(e.target.value.length <= 11) {
-                  this.setState({ phone: e.target.value })
-                }
-              }}
-              onFocus={() => {
-                this.setState({ phoneIsFocus: true });
-              }}
-              onBlur={() => {
-                this.setState({ phoneIsFocus: false });
-              }}
-              type="text"
-              placeholder="请输入手机号"/>
+              <input
+                className={phoneError ? 'error' : ''}
+                value={phone}
+                onChange={e => {
+                  if (e.target.value.length <= 11) {
+                    this.setState({phone: e.target.value})
+                  }
+                }}
+                onFocus={() => {
+                  this.setState({phoneIsFocus: true});
+                }}
+                onBlur={() => {
+                  this.setState({phoneIsFocus: false});
+                }}
+                type="text"
+                placeholder="请输入手机号"/>
             </CSSTransition>
           </div>
           <Line show={phoneIsFocus}/>
@@ -206,25 +208,27 @@ class LoginNew extends React.Component {
                 timeout={400}
                 classNames="input"
               >
-              <input
-                className={ imgCodeError ? 'error' : ''}
-                value={imgCode}
-                onChange={e => {
-                  this.setState({ imgCode: e.target.value });
-                }}
-                onFocus={() => {
-                  this.setState({ imgCodeIsFocus: true });
-                }}
-                onBlur={() => {
-                  this.setState({ imgCodeIsFocus: false });
-                }}
-                type="text"
-                placeholder="请输入图像验证码"/>
+                <input
+                  className={imgCodeError ? 'error' : ''}
+                  value={imgCode}
+                  onChange={e => {
+                    this.setState({imgCode: e.target.value});
+                  }}
+                  onFocus={() => {
+                    this.setState({imgCodeIsFocus: true});
+                  }}
+                  onBlur={() => {
+                    this.setState({imgCodeIsFocus: false});
+                  }}
+                  type="text"
+                  placeholder="请输入图像验证码"/>
               </CSSTransition>
             </div>
             <div className="right">
-              <img className="img-code" src={require('../../assets/verify-code.jpg')} />
-              <span className="refresh" onClick={() => {this.refreshCodeImage()}}></span>
+              <img className="img-code" src={require('../../assets/verify-code.jpg')}/>
+              <span className="refresh" onClick={() => {
+                this.refreshCodeImage()
+              }}/>
             </div>
           </div>
           <Line show={imgCodeIsFocus}/>
@@ -243,19 +247,19 @@ class LoginNew extends React.Component {
                 timeout={400}
                 classNames="input"
               >
-              <input
-                value={phoneCode}
-                onChange={e => {
-                  this.setState({ phoneCode: e.target.value });
-                }}
-                onFocus={() => {
-                  this.setState({ phoneCodeIsFocus: true });
-                }}
-                onBlur={() => {
-                  this.setState({ phoneCodeIsFocus: false });
-                }}
-                type="text"
-                placeholder="请输入短信验证码"/>
+                <input
+                  value={phoneCode}
+                  onChange={e => {
+                    this.setState({phoneCode: e.target.value});
+                  }}
+                  onFocus={() => {
+                    this.setState({phoneCodeIsFocus: true});
+                  }}
+                  onBlur={() => {
+                    this.setState({phoneCodeIsFocus: false});
+                  }}
+                  type="text"
+                  placeholder="请输入短信验证码"/>
               </CSSTransition>
             </div>
             <div className="right">
@@ -279,7 +283,12 @@ class LoginNew extends React.Component {
           className="modal-service"
           platform={'android'}
           onClose={this.onClose('visible')}
-          footer={[{ text: '确 定', onPress: () => { console.log('ok'); this.onClose('visible')(); } }]}
+          footer={[{
+            text: '确 定', onPress: () => {
+              console.log('ok');
+              this.onClose('visible')();
+            }
+          }]}
         >
           <div className="modal-coupon-center" style={{height: 360}}>
             <iframe
@@ -304,6 +313,7 @@ class Line extends React.Component {
     super(props);
     this.state = {}
   }
+
   render() {
     return (
       <div className="line-wrap">
@@ -318,4 +328,5 @@ class Line extends React.Component {
     )
   }
 }
+
 export default LoginNew

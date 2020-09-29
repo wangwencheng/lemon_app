@@ -3,13 +3,13 @@ import { Carousel } from 'antd-mobile';
 import styles from './index.less'
 import { connect } from 'dva';
 import router from 'umi/router';
-import OrderStatusItem from '../order-status-item';
+import UserServiceItem from '../user-status-item';
 import recycleH5_14 from '../../assets/recycleH5_14.png';
 import recycleH5_13 from '../../assets/recycleH5_13.png';
 import recycleH5_16 from '../../assets/recycleH5_16.png';
 import recycleH5_11 from '../../assets/recycleH5_11.png';
 
-export default class OrderStatus extends React.Component {
+export default class UserService extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,11 +42,11 @@ export default class OrderStatus extends React.Component {
       ],
 
       // 订单状态
-      orderStatus: {}
+      UserService: {}
     };
   }
 
-  componentWillMount() {}
+  UNSAFE_componentWillMount() {}
   orderMore(){
     console.log('跳转去更多哦')
   }
@@ -69,7 +69,7 @@ export default class OrderStatus extends React.Component {
         <div className={styles.list}>
           {(this.state.statusItem ? this.state.statusItem : []).map((item, index) => {
             return (
-              <OrderStatusItem
+              <UserServiceItem
                 count={this.props.countList && this.props.countList[item.name] !== 0 ? this.props.countList[item.name] : ""}
                 key={index}
                 text={item.text}

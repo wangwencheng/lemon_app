@@ -1,4 +1,4 @@
-import fetch from 'dva/fetch';
+import { fetch } from 'dva';
 import { Toast } from 'antd-mobile';
 import { setUrlEncoded } from './baseServer';
 import { getToken, setToken } from './token';

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import styles from './index.less'
 
-class OrderStatusItem extends React.Component {
+class UserServiceItem extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -24,4 +24,4 @@ class OrderStatusItem extends React.Component {
   }
 }
 
-export default OrderStatusItem;
+export default UserServiceItem;

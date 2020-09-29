@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'dva';
 import { Modal } from 'antd-mobile';
 import NameCard from '../../components/name-card';
-import OrderStatus from '../../components/order-status';
+import UserService from '../../components/user-status';
 import router from 'umi/router';
 import styles from './index.less';
 
@@ -38,8 +38,7 @@ class MyIndex extends Component {
           avatar={this.state.avatar}
           notLogin={not_login ? 1 : 0}
         />
-        { !my.list.data && <OrderStatus countList={0} />}
-        { my.list.data && <OrderStatus countList={my.list.data} />}
+        { !my.list.data && <UserService countList={0} />}
         <div className={styles.service_info + ' ' + 'box_shadow'}>
           <div className={styles.service_title + ' ' + 'border_bottommin'}>用户帮助</div>
           <div className={styles.service_content}>

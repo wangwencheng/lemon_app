@@ -5,9 +5,8 @@ export default [
     routes: [
       {path: '/', component: './Home/index', title: '首页'},
       {path: '/my', component: './My/index', title: '我的'},
-      {path: '/class', component: './class/index', title: '我的'},
       {path: '/home', component: './Home/index', title: '首页'},
-      {path: '/login', component: './login/index', title: '商品'},
+      {path: '/login', component: './login/index', title: '登录'},
       //   { path: '/news', component: './News/index', title: '消息' },
       //   { path: '/order', component: './Order/index', title: '我的订单' },
       //   { path: '/goodsSearch', component: './GoodsSearch/index', title: '商品搜索' },
