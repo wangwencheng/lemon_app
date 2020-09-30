@@ -7,7 +7,6 @@ import {CSSTransition} from 'react-transition-group';
 import router from 'umi/router';
 import {baseUrl} from '@/utils/baseServer';
 
-@connect(({login}) => ({login}))
 class LoginNew extends React.Component {
   constructor(props) {
     super(props);
