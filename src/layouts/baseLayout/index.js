@@ -9,8 +9,8 @@ const TabBarData = [
   {
     id: 'home',
     name: '刷新',
-    icon: require('../../assets/recycleH5_07.png'),
-    selectedicon: require('../../assets/recycleH5_02.png'),
+    icon: require('../../assets/refresh.png'),
+    selectedicon: require('../../assets/selectrefresh.png'),
     url: '/home',
   },
   {
