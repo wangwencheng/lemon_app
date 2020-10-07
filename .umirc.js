@@ -2,7 +2,7 @@ import pageRoutes from './config/router.config';
 
 const path = require('path');
 
-const server = 'http://localhost:3000';
+const lemonGateway = 'http://127.0.0.1:9999';
 
 // ref: https://umijs.org/config/
 export default {
@@ -35,11 +35,11 @@ export default {
         // themes:path.resolve(__dirname,'src/themes'),
         images:path.resolve(__dirname,'src/assets')
   },
-  // proxy: {
-  //   "/api": {
-  //     "target": 'http://192.168.2.120:8081',
-  //     "changeOrigin": true,
-  //     "pathRewrite": { "^/api" : "/api" }
-  //   }
-  // }
+  proxy: {
+    "/api": {
+      "target": lemonGateway,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api" : "" }
+    }
+  }
 }

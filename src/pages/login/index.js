@@ -6,6 +6,8 @@ import {Toast, Modal, Button, List} from 'antd-mobile';
 import {CSSTransition} from 'react-transition-group';
 import router from 'umi/router';
 import {baseUrl} from '@/utils/baseServer';
+import {getToken} from "../../utils/token";
+import {getCode} from "../../services/login";
 
 class LoginNew extends React.Component {
   constructor(props) {
@@ -14,9 +16,6 @@ class LoginNew extends React.Component {
       phone: '', // 电话
       phoneIsFocus: false, // 是否获取焦点
       phoneError: false, // 电话是否格式错误
-      imgCode: '', // 图形验证码
-      imgCodeIsFocus: false, // 是否获取焦点
-      imgCodeError: false, // 图形验证码是否图形错误
       phoneCode: '', // 短信验证码
       phoneCodeIsFocus: false, // 是否获取焦点
       codeText: '获取验证码',
@@ -29,8 +28,6 @@ class LoginNew extends React.Component {
   }
 
   componentWillMount() {
-    // 获取图形验证码
-    // this.refreshCodeImage();
 
   }
 
@@ -53,12 +50,6 @@ class LoginNew extends React.Component {
     });
   }
 
-  /**
-   * 刷新图形验证码
-   */
-  refreshCodeImage() {
-    console.log('刷新图形验证码！！')
-  }
 
   /**
    * 倒计时
@@ -73,7 +64,6 @@ class LoginNew extends React.Component {
           codeText: '重新获取',
           isWait: false
         });
-        this.refreshCodeImage();
         clearInterval(this.timer);
       } else {
         countdown--
@@ -87,16 +77,24 @@ class LoginNew extends React.Component {
    *  @return {Boolean} 当信息不完整时退出
    */
   getCode() {
-    const {phone, phoneCode, imgCode} = this.state;
+    const {phone, phoneCode} = this.state;
     const {dispatch} = this.props;
     if (this.state.isWait) {
       return false
     }
     if (!this.checkData()) return
-
-    Toast.success('验证码发送成功', 2);
-    // 接口成功发送验证码并倒计时
-    this.setTime()
+    // todo 像后端发起请求向指向手机号发验证码  /api/auth/code/sms
+    let params = {};
+    params.mobile = phone;
+    getCode(params).then(r => {
+      if (r.code && r.code == 0) {
+        Toast.success('验证码发送成功', 2);
+        // 接口成功发送验证码并倒计时
+        this.setTime()
+      } else {
+        Toast.fail('验证码发送失败', 2);
+      }
+    });
   }
 
   /**
@@ -104,7 +102,9 @@ class LoginNew extends React.Component {
    * @return {Boolean} 当信息不完整时退出
    */
   submit() {
-    router.push('/home')
+    // todo  请求后端登录接口   /api/mobile/token/sms
+    Toast.fail('请完善登录逻辑', 2);
+    //router.push('/home')
   }
 
   /**
@@ -121,15 +121,6 @@ class LoginNew extends React.Component {
       this.setState({phoneError: true});
       return false
     }
-    if (!this.state.imgCode) {
-      Toast.fail('请输入图形验证码', 2);
-      return false
-    }
-    if (!/^[a-zA-Z0-9]{4,5}$/.test(this.state.imgCode)) {
-      Toast.fail('图形验证码不正确', 2);
-      this.setState({imgCodeError: true});
-      return false
-    }
     return true
   }
 
@@ -140,15 +131,10 @@ class LoginNew extends React.Component {
         this.setState({phoneError: false});
       }
     }
-    if (prevState.imgCode !== this.state.imgCode) {
-      if (/^[0-9]{4}$/.test(this.state.imgCode)) {
-        this.setState({imgCodeError: false});
-      }
-    }
   }
 
   render() {
-    const {phone, phoneIsFocus, phoneError, imgCode, codeImageUrl, imgCodeIsFocus, imgCodeError, phoneCode, phoneCodeIsFocus, codeText, isWait} = this.state;
+    const {phone, phoneIsFocus, phoneError, phoneCode, phoneCodeIsFocus, codeText, isWait} = this.state;
     return (
       <div className="login-bg">
         <div className="logo-wrap">
@@ -256,7 +242,8 @@ class LoginNew extends React.Component {
               您在同意本应用服务使用协议之时，即视为您已经同意本隐私权政策全部内容。本隐私权政策属于本应用服务使用协议不可分割的一部分。</p>
             <p>适用范围</p>
             <p>(a) 在您注册本应用帐号时，您根据本应用要求提供的个人注册信息；</p>
-            <p>(b) 在您使用本应用网络服务，或访问本应用平台网页时，本应用自动接收并记录的您的浏览器和计算机上的信息，包括但不限于您的IP地址、浏览器的类型、使用的语言、访问日期和时间、软硬件特征信息及您需求的网页记录等数据；</p>
+            <p>(b)
+              在您使用本应用网络服务，或访问本应用平台网页时，本应用自动接收并记录的您的浏览器和计算机上的信息，包括但不限于您的IP地址、浏览器的类型、使用的语言、访问日期和时间、软硬件特征信息及您需求的网页记录等数据；</p>
             <p>© 本应用通过合法途径从商业伙伴处取得的用户个人数据。</p>
             <p>您了解并同意，以下信息不适用本隐私权政策：</p>
             <p>(a) 您在使用本应用平台提供的搜索服务时输入的关键字信息；</p>
@@ -278,11 +265,14 @@ class LoginNew extends React.Component {
             <p>信息存储和交换</p>
             <p>本应用收集的有关您的信息和资料将保存在本应用及（或）其关联公司的服务器上，这些信息和资料可能传送至您所在国家、地区或本应用收集信息和资料所在地的境外并在境外被访问、存储和展示。</p>
             <p>Cookie的使用</p>
-            <p>(a) 在您未拒绝接受cookies的情况下，本应用会在您的计算机上设定或取用cookies，以便您能登录或使用依赖于cookies的本应用平台服务或功能。本应用使用cookies可为您提供更加周到的个性化服务，包括推广服务。</p>
-            <p>(b) 您有权选择接受或拒绝接受cookies。您可以通过修改浏览器设置的方式拒绝接受cookies。但如果您选择拒绝接受cookies，则您可能无法登录或使用依赖于cookies的本应用网络服务或功能。</p>
+            <p>(a)
+              在您未拒绝接受cookies的情况下，本应用会在您的计算机上设定或取用cookies，以便您能登录或使用依赖于cookies的本应用平台服务或功能。本应用使用cookies可为您提供更加周到的个性化服务，包括推广服务。</p>
+            <p>(b)
+              您有权选择接受或拒绝接受cookies。您可以通过修改浏览器设置的方式拒绝接受cookies。但如果您选择拒绝接受cookies，则您可能无法登录或使用依赖于cookies的本应用网络服务或功能。</p>
             <p>© 通过本应用所设cookies所取得的有关信息，将适用本政策。</p>
             <p>信息安全</p>
-            <p>(a) 本应用帐号均有安全保护功能，请妥善保管您的用户名及密码信息。本应用将通过对用户密码进行加密等安全措施确保您的信息不丢失，不被滥用和变造。尽管有前述安全措施，但同时也请您注意在信息网络上不存在“完善的安全措施”。</p>
+            <p>(a)
+              本应用帐号均有安全保护功能，请妥善保管您的用户名及密码信息。本应用将通过对用户密码进行加密等安全措施确保您的信息不丢失，不被滥用和变造。尽管有前述安全措施，但同时也请您注意在信息网络上不存在“完善的安全措施”。</p>
             <p>(b) 在使用本应用网络服务进行网上交易时，您不可避免的要向交易对方或潜在的交易对</p>
             <p>7.本隐私政策的更改</p>
             <p>(a)如果决定更改隐私政策，我们会在本政策中、本公司网站中以及我们认为适当的位置发布这些更改，以便您了解我们如何收集、使用您的个人信息，哪些人可以访问这些信息，以及在什么情况下我们会透露这些信息。</p>
@@ -294,30 +284,30 @@ class LoginNew extends React.Component {
           </div>
         </Modal>
       </div>
-  );
+    );
   }
-  }
+}
 
-  // 分割线动画组件
-  class Line extends React.Component {
-    constructor(props) {
+// 分割线动画组件
+class Line extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {}
   }
 
-    render() {
+  render() {
     return (
-    <div className="line-wrap">
-    <CSSTransition
-    in={this.props.show}
-    timeout={500}
-    classNames="line"
-    >
-    <div className="line"></div>
-    </CSSTransition>
-    </div>
+      <div className="line-wrap">
+        <CSSTransition
+          in={this.props.show}
+          timeout={500}
+          classNames="line"
+        >
+          <div className="line"></div>
+        </CSSTransition>
+      </div>
     )
   }
-  }
+}
 
-  export default LoginNew
+export default LoginNew
