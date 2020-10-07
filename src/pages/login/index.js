@@ -86,16 +86,23 @@ class LoginNew extends React.Component {
     // todo 像后端发起请求向指向手机号发验证码  /api/auth/code/sms
     let params = {};
     params.mobile = phone;
-    getCode(params).then(r => {
-      if (r.code && r.code == 0) {
-        Toast.success('验证码发送成功', 2);
-        // 接口成功发送验证码并倒计时
-        this.setTime()
-      } else {
-        Toast.fail('验证码发送失败', 2);
+    params.from = 'APP';
+    getCode(params).then(
+      (result)=>{
+        console.log(11)
       }
-    });
+    )
+      //   r => {
+      //   if (r.code && r.code == 0) {
+      //     Toast.success('验证码发送成功', 2);
+      //     // 接口成功发送验证码并倒计时
+      //     this.setTime()
+      //   } else {
+      //     Toast.fail('验证码发送失败', 2);
+      //   }
+      // }
   }
+
 
   /**
    * 登录
