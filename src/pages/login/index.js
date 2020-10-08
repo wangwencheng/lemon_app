@@ -7,7 +7,7 @@ import {CSSTransition} from 'react-transition-group';
 import router from 'umi/router';
 import {baseUrl} from '@/utils/baseServer';
 import {getToken} from "../../utils/token";
-import {getCode} from "../../services/login";
+import {getCode, login} from "../../services/login";
 
 class LoginNew extends React.Component {
   constructor(props) {
@@ -83,24 +83,20 @@ class LoginNew extends React.Component {
       return false
     }
     if (!this.checkData()) return
-    // todo 像后端发起请求向指向手机号发验证码  /api/auth/code/sms
     let params = {};
     params.mobile = phone;
     params.from = 'APP';
     getCode(params).then(
-      (result)=>{
-        console.log(11)
-      }
-    )
-      //   r => {
-      //   if (r.code && r.code == 0) {
-      //     Toast.success('验证码发送成功', 2);
-      //     // 接口成功发送验证码并倒计时
-      //     this.setTime()
-      //   } else {
-      //     Toast.fail('验证码发送失败', 2);
-      //   }
-      // }
+      (result) => {
+        console.log(result)
+        if (result && result.code == 0) {
+          Toast.success('验证码发送成功', 2);
+          // 接口成功发送验证码并倒计时
+          this.setTime()
+        } else {
+          Toast.fail('验证码发送失败', 2);
+        }
+      })
   }
 
 
@@ -110,8 +106,14 @@ class LoginNew extends React.Component {
    */
   submit() {
     // todo  请求后端登录接口   /api/mobile/token/sms
-    Toast.fail('请完善登录逻辑', 2);
-    //router.push('/home')
+    let params = {};
+    login(params).then((result) => {
+      console.log('result', result)
+      if (result && result.code == 0) {
+        router.push('/home')
+      }
+      Toast.fail('请完善登录逻辑', 2);
+    });
   }
 
   /**
