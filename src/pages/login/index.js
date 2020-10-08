@@ -1,13 +1,11 @@
-import React, {Component} from 'react';
-import {connect} from 'dva';
+import React from 'react';
 import './index.less';
 import classNames from 'classnames';
-import {Toast, Modal, Button, List} from 'antd-mobile';
+import {Toast, Modal} from 'antd-mobile';
 import {CSSTransition} from 'react-transition-group';
 import router from 'umi/router';
-import {baseUrl} from '@/utils/baseServer';
-import {getToken} from "../../utils/token";
 import {getCode, login} from "../../services/login";
+import { Base64 } from 'js-base64';
 
 class LoginNew extends React.Component {
   constructor(props) {
@@ -105,8 +103,14 @@ class LoginNew extends React.Component {
    * @return {Boolean} 当信息不完整时退出
    */
   submit() {
-    // todo  请求后端登录接口   /api/mobile/token/sms
-    let params = {};
+    // todo  请求后端登录接口   /api/auth/mobile/token/sms
+    let clientId = 'lemon-user';
+    let clientSecret = '273273wang...';
+    let clientInfo=Base64.encode(clientId + ':' + clientSecret);
+    let params = {
+      body: {openId: 'APP@' + this.state.phone, type: 'SMS'},
+      headers: {Authorization: 'Basic ' + clientInfo}
+    };
     login(params).then((result) => {
       console.log('result', result)
       if (result && result.code == 0) {
