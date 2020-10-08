@@ -1,5 +1,5 @@
-import request from 'utils/request';
+import proxyRequest from 'utils/request';
 
 export async function getCode(params) {
-  return request.get('/api/auth/code/sms', params);
+  return proxyRequest.get('/api/auth/code/sms', params);
 }
