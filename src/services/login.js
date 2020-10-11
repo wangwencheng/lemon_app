@@ -5,5 +5,5 @@ export async function getCode(params) {
 }
 
 export async function login(params) {
-  return proxyRequest.get('/api/auth/mobile/token/sms', params);
+  return proxyRequest.post('/api/auth/mobile/token/sms', params);
 }

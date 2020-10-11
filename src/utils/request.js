@@ -1,7 +1,8 @@
-import { fetch } from 'dva';
-import { Toast } from 'antd-mobile';
-import { setUrlEncoded } from './baseServer';
-import { getToken, setToken } from './token';
+import {fetch} from 'dva';
+import {Toast} from 'antd-mobile';
+import {Base64} from 'js-base64';
+import {setUrlEncoded} from './baseServer';
+import {getToken, setToken} from './token';
 import router from 'umi/router';
 
 const codeMessage = {
@@ -42,24 +43,26 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 function request(url, options) {
+  let clientId = 'lemon-user';
+  let clientSecret = '273273wang...';
+  let clientInfo = Base64.encode(clientId + ':' + clientSecret);
   const defaultOptions = {
     credentials: 'include',
   };
-  const newOptions = { ...defaultOptions, ...options };
-  // body 添加token
-  if (newOptions.body) {
-    newOptions.body.__token__ = getToken();
-  } else {
-    newOptions.body = {
-      __token__: getToken(),
-    };
+  const newOptions = {...defaultOptions, ...options};
+  //添加basic认证
+  if(url.includes("/api/auth/mobile/token/sms")){
+    newOptions.headers = {
+      Authorization: 'Basic ' + clientInfo
+    }
+  }else {
+    newOptions.headers = {
+      Authorization: 'Bearer ' + getToken()
+    }
   }
+
   let new_url;
-  if (
-    newOptions.method === 'POST' ||
-    newOptions.method === 'PUT' ||
-    newOptions.method === 'DELETE'
-  ) {
+  if (newOptions.method === 'POST' || newOptions.method === 'PUT' || newOptions.method === 'DELETE') {
     if (newOptions.contentType === 'application/json') {
       newOptions.headers = {
         Accept: 'application/json',
@@ -104,45 +107,45 @@ function request(url, options) {
 function proxyRequest(url, options, showError = true) {
   options = options || {};
   return request(url, options).then((response) => {
-    if (response && response.token) {
-        setToken(response.token);
+    if (response && response.data) {
+      setToken(response.data.access_token);
     }
     if (response.code === -1 || response.code === 0) {
       // return response.data || {};
       return response || {};
     }
     if (showError) {
-      if (response.code !== 403){
+      if (response.code !== 403) {
         Toast.fail(response.msg, 1)
       }
     }
-      const e = new Error();
-      e.code = response.code;
-      e.message = response.message || `Failed to get data code : ${e.code}`;
-      throw e;
-  }).catch((e,url) => {
-    console.log(e,'errrr')
+    const e = new Error();
+    e.code = response.code;
+    e.message = response.message || `Failed to get data code : ${e.code}`;
+    throw e;
+  }).catch((e, url) => {
+    console.log(e, 'errrr')
     const status = e.code;
-      if (status === 401) {
-        // @HACK
-        /* eslint-disable no-underscore-dangle */
-        window.g_app._store.dispatch({
-          type: 'login/logout',
-        });
-        return;
-      }
-      if (status === 403) {
-        router.push('/login');
-        return;
-      }
-      if (status <= 504 && status >= 500) {
-        // router.push('/login');
-        return;
-      }
-      if (status >= 404 && status < 422) {
-        // router.push('/404');
-        return;
-      }
+    if (status === 401) {
+      // @HACK
+      /* eslint-disable no-underscore-dangle */
+      window.g_app._store.dispatch({
+        type: 'login/logout',
+      });
+      return;
+    }
+    if (status === 403) {
+      router.push('/login');
+      return;
+    }
+    if (status <= 504 && status >= 500) {
+      // router.push('/login');
+      return;
+    }
+    if (status >= 404 && status < 422) {
+      // router.push('/404');
+      return;
+    }
   });
 }
 
