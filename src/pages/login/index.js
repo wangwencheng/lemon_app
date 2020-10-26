@@ -113,7 +113,7 @@ class LoginNew extends React.Component {
       if (result && result.code == 0) {
         router.push('/home')
       }
-      Toast.fail('请完善登录逻辑', 2);
+      Toast.fail('登陆失败', 2);
     });
   }
 

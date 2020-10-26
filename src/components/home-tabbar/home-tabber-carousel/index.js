@@ -32,15 +32,6 @@ class HomeTabbarCarousel extends Component{
             onClick={() => this.bannerLink(val.url)}
             style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
           >
-            <img
-              src={require('../../../assets/2c3968e33e2342feaa9fa3695b2e169e.png')}
-              alt=""
-              style={{ width: '100%', verticalAlign: 'top' }}
-              onLoad={() => {
-                window.dispatchEvent(new Event('resize'));
-                this.setState({ imgHeight: 'auto' });
-              }}
-            />
           </a>
         ))}
       </Carousel>

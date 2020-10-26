@@ -4,8 +4,8 @@ export default {
   namespace: 'home',
   state: {
     'list':{
-      'productList': '',
-      'bannerList': ''
+      'productList': ['键盘','水果'],
+      'bannerList': ['推荐','热点']
     }
   },
   effects: {
