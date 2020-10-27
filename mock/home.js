@@ -5,11 +5,12 @@ export default {
       "bannerList":[
         {
           "isShow":1,
-          "url":null,
+          "url":'www.baidu.com',
           "imageUrl":"../../../assets/2c3968e33e2342feaa9fa3695b2e169e.png",
-          "comment":"仅做展示"}
+          "comment":"仅做展示"
+        }
         ],
-        "productList":[
+      "productList":[
           {
             "id":1,
             "productName":"苹果 iPhone",

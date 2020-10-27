@@ -1,4 +1,4 @@
-import { reg } from 'services/my';
+import { buttonList } from 'services/my';
 import router from 'umi/router';
 export default {
   namespace: 'my',
@@ -6,8 +6,8 @@ export default {
     list: ''
   },
   effects: {
-    *reg({ payload, callback }, { call, put }) {
-      const response = yield call(reg, payload);
+    *buttonList({ payload, callback }, { call, put }) {
+      const response = yield call(buttonList, payload);
       if(!response){
         return;
       }

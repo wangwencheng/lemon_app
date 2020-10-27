@@ -1,16 +1,13 @@
-import { reg } from 'services/home';
+import { buttonList } from 'services/home';
 import router from 'umi/router';
 export default {
   namespace: 'home',
   state: {
-    'list':{
-      'productList': ['键盘','水果'],
-      'bannerList': ['推荐','热点']
-    }
+    buttonMenuList:[]
   },
   effects: {
-    *reg({ payload, callback }, { call, put }) {
-      const response = yield call(reg, payload);
+    *buttonList({ payload, callback }, { call, put }) {
+      const response = yield call(buttonList, payload);
       yield put({
         type: 'setData',
         payload: response.data
@@ -19,9 +16,10 @@ export default {
   },
   reducers: {
     setData(state, { payload }) {
+      console.log('buttonMenuList',payload)
       return {
         ...state,
-        list: payload,
+        buttonMenuList: payload,
       }
     }
   },
@@ -30,7 +28,7 @@ export default {
       return history.listen(({ pathname, search }) => {
         if (pathname == '/home'||pathname == '/') {
           dispatch({
-            type: 'reg',
+            type: 'buttonList',
           });
         }
       });
