@@ -16,7 +16,6 @@ export default {
   },
   reducers: {
     setData(state, { payload }) {
-      console.log('buttonMenuList',payload)
       return {
         ...state,
         buttonMenuList: payload,

@@ -5,6 +5,8 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import styles from './index.less';
 import ReactDOM from 'react-dom';
+import {Player} from 'video-react';
+
 
 function MyBody(props) {
   return (
@@ -91,14 +93,12 @@ class Home extends Component {
     // setTimeout(() => this.lv.scrollTo(0, 120), 800);
     const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
     // simulate initial Ajax
-    console.log('sectionIDs',sectionIDs)
-    console.log('rowIDs',rowIDs)
     setTimeout(() => {
       genData();
       this.setState({
         buttonMenuList: this.props.home.buttonMenuList,
-        dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlobs, sectionIDs, rowIDs),
-        isLoading: false,
+        dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlobs),
+        isLoading: true,
         height: hei,
       });
     }, 600);
@@ -115,7 +115,7 @@ class Home extends Component {
     setTimeout(() => {
       genData(++pageIndex);
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlobs, sectionIDs, rowIDs),
+        dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlobs),
         isLoading: false,
       });
     }, 1000);
@@ -123,7 +123,17 @@ class Home extends Component {
 
   buttonLink(link) {
     console.log(link)
-    console.log('ssss',this.state.buttonMenuList)
+  }
+
+  renderButton = () => {
+    let buttonMenuList = this.state.buttonMenuList;
+    return buttonMenuList.map((button, index) => {
+      return <span className='spanButton' key={index}>
+                <a onClick={() => this.buttonLink(button.buttonLocation)}>
+                  <font color="black">{button.buttonName}</font>
+                </a>
+             </span>
+    })
   }
 
   render() {
@@ -132,7 +142,7 @@ class Home extends Component {
         key={`${sectionID}-${rowID}`}
         style={{
           backgroundColor: '#F5F5F9',
-          height: 8,
+          height: 20,
           borderTop: '1px solid #ECECED',
           borderBottom: '1px solid #ECECED',
         }}
@@ -146,20 +156,13 @@ class Home extends Component {
       const obj = data[index--];
       return (
         <div key={rowID} style={{padding: '0 15px'}}>
-          <div
-            style={{
-              lineHeight: '50px',
-              color: '#888',
-              fontSize: 18,
-              borderBottom: '1px solid #F6F6F6',
-            }}
-          >{obj.title}</div>
           <div style={{display: '-webkit-box', flex: 1, padding: '15px 0'}}>
-            <img style={{height: '64px', marginRight: '15px'}} src={obj.img} alt=""/>
             <div style={{lineHeight: 1}}>
               <div style={{marginBottom: '8px', fontWeight: 'bold'}}>{obj.des}</div>
-              <div><span style={{fontSize: '30px', color: '#FF6E27'}}>35</span>¥ {rowID}</div>
             </div>
+            <Player ref="player" videoId="video-1">
+              <source src={this.state.inputVideoUrl}/>
+            </Player>
           </div>
         </div>
       );
@@ -169,7 +172,7 @@ class Home extends Component {
         <div className='homePage_search'>
           <div className='homePage_input'>
             <SearchBar
-              placeholder="搜索你想要的商品"
+              placeholder="搜索你想要视频"
               ref={ref => this.manualFocusInst = ref}
               onFocus={() => router.push('/search')}
             />
@@ -179,41 +182,7 @@ class Home extends Component {
           </div>
         </div>
         <div className='btnDiv'>
-          <span className='spanButton'>
-            <a onClick={() => this.buttonLink("http:www.baidu.com")}>
-              <font color="black">推荐</font>
-            </a>
-          </span>
-          <span className='spanButton'>
-            <a onClick={() => this.buttonLink("http:www.baidu.com")}>
-              <font color="black">热点</font>
-            </a>
-          </span>
-          <span className='spanButton'>
-            <a onClick={() => this.buttonLink("http:www.baidu.com")}>
-              <font color="black">热点</font>
-            </a>
-          </span>
-          <span className='spanButton'>
-            <a onClick={() => this.buttonLink("http:www.baidu.com")}>
-              <font color="black">热点</font>
-            </a>
-          </span><span className='spanButton'>
-            <a onClick={() => this.buttonLink("http:www.baidu.com")}>
-              <font color="black">热点</font>
-            </a>
-          </span>
-          <span className='spanButton'>
-            <a onClick={() => this.buttonLink("http:www.baidu.com")}>
-              <font color="black">热点</font>
-            </a>
-          </span>
-          <span className='spanButton'>
-            <a onClick={() => this.buttonLink("http:www.baidu.com")}>
-              <font color="black">热点</font>
-            </a>
-          </span>
-
+          {this.renderButton()}
         </div>
         <ListView
           ref={el => this.lv = el}
