@@ -5,7 +5,6 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import styles from './index.less';
 import ReactDOM from 'react-dom';
-import {Player} from 'video-react';
 
 
 function MyBody(props) {
@@ -19,17 +18,17 @@ function MyBody(props) {
 
 const data = [
   {
-    img: 'https://zos.alipayobjects.com/rmsportal/dKbkpPXKfvZzWCM.png',
+    img: 'https://articles.csdn.net/uploads/allimg/110527/16354R640-1.jpg',
     title: 'Meet hotel',
     des: '不是所有的兼职汪都需要风吹日晒',
   },
   {
-    img: 'https://zos.alipayobjects.com/rmsportal/XmwCzSeJiqpkuMB.png',
+    img: 'https://pic1.zhimg.com/80/v2-b91fb22a36fa3e11a7a7e4dd71cae90c_1440w.jpg',
     title: 'McDonald\'s invites you',
     des: '不是所有的兼职汪都需要风吹日晒',
   },
   {
-    img: 'https://zos.alipayobjects.com/rmsportal/hfVtzEhPzTUewPm.png',
+    img: 'https://articles.csdn.net/uploads/allimg/110527/16354R640-1.jpg',
     title: 'Eat the week',
     des: '不是所有的兼职汪都需要风吹日晒',
   },
@@ -142,11 +141,12 @@ class Home extends Component {
         key={`${sectionID}-${rowID}`}
         style={{
           backgroundColor: '#F5F5F9',
-          height: 20,
+          height: '30px',
           borderTop: '1px solid #ECECED',
           borderBottom: '1px solid #ECECED',
-        }}
-      />
+        }}>
+        日垚是傻逼
+      </div>
     );
     let index = data.length - 1;
     const row = (rowData, sectionID, rowID) => {
@@ -155,17 +155,10 @@ class Home extends Component {
       }
       const obj = data[index--];
       return (
-        <div key={rowID} style={{padding: '0 15px'}}>
-          <div style={{display: '-webkit-box', flex: 1, padding: '15px 0'}}>
-            <div style={{lineHeight: 1}}>
-              <div style={{marginBottom: '8px', fontWeight: 'bold'}}>{obj.des}</div>
-            </div>
-            <Player ref="player" videoId="video-1">
-              <source src={this.state.inputVideoUrl}/>
-            </Player>
-          </div>
+        <div key={rowID} style={{paddingTop: "2px", height: '200'}}>
+          <img src={obj.img}/>
         </div>
-      );
+      )
     };
     return (
       <div className='homePage'>
