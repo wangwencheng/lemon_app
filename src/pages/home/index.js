@@ -157,6 +157,7 @@ class Home extends Component {
       return (
         <div key={rowID} style={{paddingTop: "2px", height: '200'}}>
           <img src={obj.img}/>
+          <video src='https://media.w3.org/2010/05/sintel/trailer.mp4'/>
         </div>
       )
     };
