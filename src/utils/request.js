@@ -51,13 +51,16 @@ function request(url, options) {
   };
   const newOptions = {...defaultOptions, ...options};
   //添加basic认证
-  if(url.includes("/api/auth/mobile/token/sms")){
+  if (url.includes("/api/auth/mobile/token/sms")) {
     newOptions.headers = {
       Authorization: 'Basic ' + clientInfo
     }
-  }else {
-    newOptions.headers = {
-      Authorization: 'Bearer ' + getToken()
+  } else {
+    let tokenInfo = JSON.parse(getToken());
+    if (tokenInfo != null) {
+      newOptions.headers = {
+        Authorization: 'Bearer ' + tokenInfo.access_token
+      }
     }
   }
 
@@ -92,7 +95,6 @@ function request(url, options) {
   }
 
   return fetch(new_url, newOptions)
-    .then(checkStatus)
     .then((response) => {
       return response.json();
     });
@@ -107,9 +109,6 @@ function request(url, options) {
 function proxyRequest(url, options, showError = true) {
   options = options || {};
   return request(url, options).then((response) => {
-    if (response && response.data) {
-      setToken(response.data.access_token);
-    }
     if (response.code === -1 || response.code === 0) {
       // return response.data || {};
       return response || {};

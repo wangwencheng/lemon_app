@@ -1,44 +1,50 @@
-import React, { Component } from 'react'
-import { connect } from 'dva';
-import { Modal } from 'antd-mobile';
+import React, {Component} from 'react'
+import {connect} from 'dva';
+import {Modal} from 'antd-mobile';
 import NameCard from '../../components/name-card';
 import UserService from '../../components/user-status';
 import router from 'umi/router';
 import styles from './index.less';
+import {USER_INFO} from "../../utils/constant";
 
-@connect(({ my }) => ({ my }))
+
+@connect(({my}) => ({my}))
 class MyIndex extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nowdata: 0,
       name: '登录/注册',
-      avatar:'',
-      not_login: false
+      avatar: 'https://zos.alipayobjects.com/rmsportal/dKbkpPXKfvZzWCM.png',
     }
   }
-  componentDidMount() {
-    const { dispatch } = this.props;
 
+
+  componentDidMount() {
   }
-  linkurl(v){
+
+
+  linkurl(v) {
     if (v === 'about') {
       console.log('去关于我们咯')
     } else {
       console.log('去设置中心咯')
     }
   }
+
   render() {
-    const { my } = this.props;
-    const { not_login } = this.state;
+    const {my} = this.props;
+    let userInfoData = JSON.parse(localStorage.getItem(USER_INFO));
+    if (userInfoData == null) {
+      router.push('login')
+    }
     return (
       <div className={styles.content_me}>
         <NameCard
-          name={not_login ? JSON.parse(localStorage.getItem('USER_INFO')).name : '登录/注册'}
-          avatar={this.state.avatar}
-          notLogin={not_login ? 1 : 0}
+          name={userInfoData.nickName}
+          avatar={userInfoData.avatar}
         />
-        { !my.list.data && <UserService countList={0} />}
+        {!my.list.data && <UserService countList={0}/>}
         <div className={styles.service_info + ' ' + 'box_shadow'}>
           <div className={styles.service_title + ' ' + 'border_bottommin'}>用户帮助</div>
           <div className={styles.service_content}>
@@ -50,7 +56,9 @@ class MyIndex extends Component {
               />
               <div className={styles.service_text}>关于我们</div>
             </div>
-            <div className={styles.service_item} onClick={() => {console.log('帮助中心')}}>
+            <div className={styles.service_item} onClick={() => {
+              console.log('帮助中心')
+            }}>
               <img
                 className={styles.service_img}
                 src={require('../../assets/recycleH5_19.png')}
@@ -72,4 +80,5 @@ class MyIndex extends Component {
     )
   }
 }
+
 export default MyIndex;

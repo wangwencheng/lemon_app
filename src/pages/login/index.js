@@ -6,6 +6,9 @@ import {CSSTransition} from 'react-transition-group';
 import router from 'umi/router';
 import {getCode, login} from "../../services/login";
 import {Base64} from 'js-base64';
+import {setToken} from "../../utils/token";
+import {userInfo} from "../../services/user";
+import {USER_INFO} from "../../utils/constant";
 
 class LoginNew extends React.Component {
   constructor(props) {
@@ -25,8 +28,18 @@ class LoginNew extends React.Component {
     this.submit = this.submit.bind(this)
   }
 
-  componentWillMount() {
+  async getUserInfo() {
+    userInfo().then((result) => {
+      if (result == null) {
+        router.push("login");
+        return;
+      }
+      console.log('获取用户信息成功', result.data)
+      localStorage.setItem(USER_INFO, JSON.stringify(result.data))
+    })
+  }
 
+  componentWillMount() {
   }
 
   // 协议弹窗
@@ -111,9 +124,12 @@ class LoginNew extends React.Component {
     login(params).then((result) => {
       console.log('result', result)
       if (result && result.code == 0) {
+        setToken(JSON.stringify(result.data))
+        this.getUserInfo();
         router.push('/home')
+      } else {
+        Toast.fail(result.msg, 2);
       }
-      Toast.fail('登陆失败', 2);
     });
   }
 

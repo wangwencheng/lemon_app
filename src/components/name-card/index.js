@@ -13,27 +13,14 @@ class NameCard extends React.Component {
     router.push('/login');
   }
   render() {
-    const avatar = this.props.avatar || imgURL;
-    if (this.props.notLogin === 1) {
-      return (
-       <div className={styles.name_content}>
-         <div className={styles.content_card}>
-           <img className={styles.avatar} src={avatar} alt="" />
-           <div className={styles.content_name}>{this.props.name}</div>
-         </div>
-       </div>
-     )
-   } else {
-     return (
-      <div className={styles.name_content}
-        onClick={() => this.link()}>
+    return (
+      <div className={styles.name_content}>
         <div className={styles.content_card}>
-          <img className={styles.avatar} src={avatar} alt="" />
+          <img className={styles.avatar} src={this.props.avatar} alt="" />
           <div className={styles.content_name}>{this.props.name}</div>
         </div>
       </div>
     )
-   }
   }
 }
 

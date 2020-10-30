@@ -33,6 +33,7 @@ const data = [
     des: '不是所有的兼职汪都需要风吹日晒',
   },
 ];
+let url = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
 const NUM_SECTIONS = 5;
 const NUM_ROWS_PER_SECTION = 5;
 let pageIndex = 0;
@@ -157,7 +158,6 @@ class Home extends Component {
       return (
         <div key={rowID} style={{paddingTop: "2px", height: '200'}}>
           <img src={obj.img}/>
-          <video src='https://media.w3.org/2010/05/sintel/trailer.mp4'/>
         </div>
       )
     };
