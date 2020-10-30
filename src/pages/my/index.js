@@ -20,8 +20,6 @@ class MyIndex extends Component {
   }
 
 
-  componentDidMount() {
-  }
 
 
   linkurl(v) {

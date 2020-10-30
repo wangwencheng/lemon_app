@@ -39,9 +39,6 @@ class LoginNew extends React.Component {
     })
   }
 
-  componentWillMount() {
-  }
-
   // 协议弹窗
   showProtocol() {
     this.setState({
