@@ -1,10 +1,22 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'dva';
 import {SearchBar, Modal, ListView} from 'antd-mobile';
 import Link from 'umi/link';
 import router from 'umi/router';
 import styles from './index.less';
 import ReactDOM from 'react-dom';
+import {
+  Player,
+  ControlBar,
+  PlayToggle, // PlayToggle 播放/暂停按钮 若需禁止加 disabled
+  ReplayControl, // 后退按钮
+  ForwardControl,  // 前进按钮
+  CurrentTimeDisplay,
+  TimeDivider,
+  PlaybackRateMenuButton,  // 倍速播放选项
+  VolumeMenuButton
+} from 'video-react';
+import "video-react/dist/video-react.css"; // import css
 
 
 function MyBody(props) {
@@ -104,6 +116,7 @@ class Home extends Component {
     }, 600);
   }
 
+
   onEndReached = (event) => {
     // load new data
     // hasMore: from backend data, indicates whether it is the last page, here is false
@@ -127,6 +140,10 @@ class Home extends Component {
 
   renderButton = () => {
     let buttonMenuList = this.state.buttonMenuList;
+    if (buttonMenuList == null) {
+      router.push("login");
+      return;
+    }
     return buttonMenuList.map((button, index) => {
       return <span className='spanButton' key={index}>
                 <a onClick={() => this.buttonLink(button.buttonLocation)}>
@@ -156,9 +173,33 @@ class Home extends Component {
       }
       const obj = data[index--];
       return (
-        <div key={rowID} style={{paddingTop: "2px", height: '200'}}>
-          <img src={obj.img}/>
-        </div>
+        <Fragment>
+          <div key={rowID} className='videoDiv'>
+            <Player
+              ref={c => {
+                this.player = c;
+              }}
+              fluid={false}
+              width={'100%'}
+              height={298}
+              poster="https://video-react.js.org/assets/poster.png"
+            >
+              <source
+                src={'https://v-cdn.zjol.com.cn/280443.mp4'}
+                type="video/mp4"
+              />
+              <ControlBar autoHide={false} disableDefaultControls={false}>
+                <ReplayControl seconds={10} order={1.1}/>
+                <ForwardControl seconds={30} order={1.2}/>
+                <PlayToggle />
+                <CurrentTimeDisplay order={4.1}/>
+                <TimeDivider order={4.2}/>
+                <PlaybackRateMenuButton rates={[5, 2, 1.5, 1, 0.5]} order={7.1}/>
+                <VolumeMenuButton/>
+              </ControlBar>
+            </Player>
+          </div>
+        </Fragment>
       )
     };
     return (
