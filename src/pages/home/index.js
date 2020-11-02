@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'dva';
 import {SearchBar, Modal, ListView} from 'antd-mobile';
+import {videoInfo} from "../../services/video";
 import Link from 'umi/link';
 import router from 'umi/router';
 import styles from './index.less';
@@ -28,24 +29,6 @@ function MyBody(props) {
   );
 }
 
-const data = [
-  {
-    img: 'https://articles.csdn.net/uploads/allimg/110527/16354R640-1.jpg',
-    title: 'Meet hotel',
-    des: '不是所有的兼职汪都需要风吹日晒',
-  },
-  {
-    img: 'https://pic1.zhimg.com/80/v2-b91fb22a36fa3e11a7a7e4dd71cae90c_1440w.jpg',
-    title: 'McDonald\'s invites you',
-    des: '不是所有的兼职汪都需要风吹日晒',
-  },
-  {
-    img: 'https://articles.csdn.net/uploads/allimg/110527/16354R640-1.jpg',
-    title: 'Eat the week',
-    des: '不是所有的兼职汪都需要风吹日晒',
-  },
-];
-let url = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
 const NUM_SECTIONS = 5;
 const NUM_ROWS_PER_SECTION = 5;
 let pageIndex = 0;
@@ -92,6 +75,7 @@ class Home extends Component {
       banner: [],
       icon: [],
       tab: [],
+      videoList: [],
       bottomBanner: [],
       buttonMenuList: [],
       cardLists: [],
@@ -116,6 +100,15 @@ class Home extends Component {
     }, 600);
   }
 
+  componentWillMount() {
+    videoInfo().then((result) => {
+      if (result && result.code == 0) {
+        this.setState({
+          videoList: result.data.records
+        })
+      }
+    })
+  }
 
   onEndReached = (event) => {
     // load new data
@@ -166,6 +159,8 @@ class Home extends Component {
         日垚是傻逼
       </div>
     );
+
+    let data = this.state.videoList;
     let index = data.length - 1;
     const row = (rowData, sectionID, rowID) => {
       if (index < 0) {
@@ -182,16 +177,18 @@ class Home extends Component {
               fluid={false}
               width={'100%'}
               height={298}
+              preload={'metadata'}
               poster="https://video-react.js.org/assets/poster.png"
+              //   aspectRatio={'1:1'}     //视频宽高比
             >
               <source
-                src={'https://v-cdn.zjol.com.cn/280443.mp4'}
+                src={obj.videoUrl}
                 type="video/mp4"
               />
               <ControlBar autoHide={false} disableDefaultControls={false}>
                 <ReplayControl seconds={10} order={1.1}/>
                 <ForwardControl seconds={30} order={1.2}/>
-                <PlayToggle />
+                <PlayToggle/>
                 <CurrentTimeDisplay order={4.1}/>
                 <TimeDivider order={4.2}/>
                 <PlaybackRateMenuButton rates={[5, 2, 1.5, 1, 0.5]} order={7.1}/>
