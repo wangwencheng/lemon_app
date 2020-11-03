@@ -6,6 +6,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import styles from './index.less';
 import ReactDOM from 'react-dom';
+import $ from 'jquery'
 import {
   Player,
   ControlBar,
@@ -85,6 +86,10 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    var buttonDom = document.getElementsByClassName("video-react-big-play-button video-react-big-play-button-left");
+    console.log('buttonDom',buttonDom)
+
+
     // you can scroll to the specified position
     // setTimeout(() => this.lv.scrollTo(0, 120), 800);
     const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
@@ -100,14 +105,26 @@ class Home extends Component {
     }, 600);
   }
 
-  componentWillMount() {
-    videoInfo().then((result) => {
+  getVideoInfo = (params) => {
+    videoInfo(params).then((result) => {
       if (result && result.code == 0) {
         this.setState({
           videoList: result.data.records
         })
       }
     })
+  }
+
+
+  makeButtonCenter() {
+    // const dom = ReactDOM.findDOMNode("button");
+    // console.log('dom',dom)
+    // const html = ReactDOM.findDOMNode("button");
+    // console.log(html)
+  }
+
+  componentWillMount() {
+    this.getVideoInfo();
   }
 
   onEndReached = (event) => {
@@ -128,7 +145,11 @@ class Home extends Component {
   }
 
   buttonLink(link) {
-    console.log(link)
+    this.getVideoInfo({'videoType': link})
+  }
+
+  reloadVideo = data => {
+    console.log('data', data)
   }
 
   renderButton = () => {
@@ -139,7 +160,7 @@ class Home extends Component {
     }
     return buttonMenuList.map((button, index) => {
       return <span className='spanButton' key={index}>
-                <a onClick={() => this.buttonLink(button.buttonLocation)}>
+                <a onClick={() => this.buttonLink(button.buttonType)}>
                   <font color="black">{button.buttonName}</font>
                 </a>
              </span>
@@ -177,8 +198,8 @@ class Home extends Component {
               fluid={false}
               width={'100%'}
               height={298}
-              preload={'metadata'}
-              poster="https://video-react.js.org/assets/poster.png"
+              //  preload={'metadata'}
+              poster={obj.videoThumbnail}
               //   aspectRatio={'1:1'}     //视频宽高比
             >
               <source
@@ -206,10 +227,14 @@ class Home extends Component {
             <SearchBar
               placeholder="搜索你想要视频"
               ref={ref => this.manualFocusInst = ref}
-              onFocus={() => router.push('/search')}
+              onSubmit={value => {
+                this.getVideoInfo({'videoName': value})
+              }}
             />
           </div>
-          <div className='homePage_search_ico' onClick={() => router.push('/class')}>
+          <div className='homePage_search_ico' onClick={(e) => {
+            this.reloadVideo(e);
+          }}>
             <img src={require('../../assets/icon-classify.png')}/>
           </div>
         </div>
