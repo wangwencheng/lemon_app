@@ -46,6 +46,7 @@ class Home extends Component {
       refreshing: true,
       buttonMenuList: [],
       visible: false,
+      height: document.documentElement.clientHeight - (document.documentElement.clientWidth*74/375),
     }
   }
 
@@ -98,7 +99,6 @@ class Home extends Component {
 
       }
     })
-    console.log('getData')
   }
 
   getVideoInfo = (params) => {
@@ -247,9 +247,7 @@ class Home extends Component {
             overflow: 'auto',
           }}
           pageSize={4}
-          onScroll={() => {
-            console.log('scroll');
-          }}
+          //onScroll={() => {console.log('scroll');}}
           scrollRenderAheadDistance={500}
           onEndReached={this.onEndReached}
           onEndReachedThreshold={10}
