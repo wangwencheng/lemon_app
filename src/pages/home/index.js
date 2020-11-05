@@ -175,15 +175,15 @@ class Home extends Component {
       <div key={`${sectionID}-${rowID}`} className='separator_div'>
         <span style={{width: 50, marginLeft: 5}}>
           <span><img src={require('../../assets/view.jpg')} width={20} height={15}/></span>
-          <span>190.3万</span>
+          <span style={{margin:5}}>190.3万</span>
         </span>
         <span style={{width: 50, marginLeft: 5}}>
           <span><img src={require('../../assets/thump.jpg')} width={20} height={15}/></span>
-          <span>36</span>
+          <span style={{margin:5}}>36</span>
         </span>
         <span style={{width: 50, marginLeft: 5}}>
           <span><img src={require('../../assets/reply.jpg')} width={20} height={15}/></span>
-          <span>6</span>
+          <span style={{margin:5}}>6</span>
         </span>
         <span style={{float: "right", width: 50, marginLeft: 5}}>
           <span><img src={require('../../assets/weixin.jpg')} width={20} height={25}/></span>
