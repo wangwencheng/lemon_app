@@ -3,6 +3,7 @@ import {connect} from 'dva';
 import {Toast, SearchBar, Modal, ListView} from 'antd-mobile';
 import {videoInfo} from "../../services/video";
 import router from 'umi/router';
+import {buttonList} from '../../services/home';
 import styles from './index.less';
 import {
   Player,
@@ -46,21 +47,21 @@ class Home extends Component {
       refreshing: true,
       buttonMenuList: [],
       visible: false,
-      height: document.documentElement.clientHeight - (document.documentElement.clientWidth*74/375),
+      height: document.documentElement.clientHeight - (document.documentElement.clientWidth * 74 / 375),
     }
   }
 
   componentDidMount() {
-    this.getData(true)
-  }
-
-  getData(ref = false) {
-    //获取数据
     const para = {}
     para.pageSize = this.state.pageSize
-    para.pageNo = this.state.pageNo
-    videoInfo(para).then((result) => {
-      if (result && result.code == 0) {
+    para.pageNo = 1
+    this.getData(true, para)
+  }
+
+  getData(ref = false, params) {
+    //获取数据
+    videoInfo(params).then((result) => {
+      if (result && result.code === 0) {
         const dataList = result.data.records
         const len = dataList.length
         if (len <= 0) {                                // 判断是否已经没有数据了
@@ -101,19 +102,14 @@ class Home extends Component {
     })
   }
 
-  getVideoInfo = (params) => {
-    videoInfo(params).then((result) => {
-      if (result && result.code == 0) {
+  componentWillMount() {
+    buttonList().then((result) => {
+      if (result && result.code === 0) {
         this.setState({
-          videoList: result.data.records
+          buttonMenuList: result.data
         })
       }
     })
-  }
-
-
-  componentWillMount() {
-    this.getVideoInfo();
   }
 
   // 滑动到底部时加载更多
@@ -126,7 +122,10 @@ class Home extends Component {
       isLoading: true,
       pageNo: this.state.pageNo + 1, // 加载下一页
     }, () => {
-      this.getData(false)
+      const para = {}
+      para.pageSize = this.state.pageSize
+      para.pageNo = this.state.pageNo
+      this.getData(false, para)
     })
   }
 
@@ -137,12 +136,19 @@ class Home extends Component {
       isLoading: true,
       pageNo: 1 // 刷新嘛，一般加载第一页，或者按你自己的逻辑（比如每次刷新，换一个随机页码）
     }, () => {
-      this.getData(true)
+      const para = {}
+      para.pageSize = this.state.pageSize
+      para.pageNo = this.state.pageNo
+      this.getData(true, para)
     })
   }
 
   buttonLink(link) {
-    this.getVideoInfo({'videoType': link})
+    const para = {}
+    para.pageSize = this.state.pageSize
+    para.pageNo = 1
+    para.videoType = link;
+    this.getData(true, para)
   }
 
   reloadVideo = data => {
@@ -166,15 +172,23 @@ class Home extends Component {
 
   render() {
     const separator = (sectionID, rowID) => (
-      <div
-        key={`${sectionID}-${rowID}`}
-        style={{
-          backgroundColor: '#F5F5F9',
-          height: '30px',
-          borderTop: '1px solid #ECECED',
-          borderBottom: '1px solid #ECECED',
-        }}>
-        日垚是傻逼
+      <div key={`${sectionID}-${rowID}`} className='separator_div'>
+        <span style={{width: 50, marginLeft: 5}}>
+          <span><img src={require('../../assets/view.jpg')} width={20} height={15}/></span>
+          <span>190.3万</span>
+        </span>
+        <span style={{width: 50, marginLeft: 5}}>
+          <span><img src={require('../../assets/thump.jpg')} width={20} height={15}/></span>
+          <span>36</span>
+        </span>
+        <span style={{width: 50, marginLeft: 5}}>
+          <span><img src={require('../../assets/reply.jpg')} width={20} height={15}/></span>
+          <span>6</span>
+        </span>
+        <span style={{float: "right", width: 50, marginLeft: 5}}>
+          <span><img src={require('../../assets/weixin.jpg')} width={20} height={25}/></span>
+          <span style={{writingMode: "tb-rl", fontFamily: "italic", fontWeight: 700, marginTop: 5,marginLeft:5}}>...</span>
+        </span>
       </div>
     );
 
@@ -219,7 +233,11 @@ class Home extends Component {
               placeholder="搜索你想要视频"
               ref={ref => this.manualFocusInst = ref}
               onSubmit={value => {
-                this.getVideoInfo({'videoName': value})
+                const para = {}
+                para.pageSize = this.state.pageSize
+                para.pageNo = this.state.pageNo
+                para.videoName = value;
+                this.getData(true, para)
               }}
             />
           </div>
